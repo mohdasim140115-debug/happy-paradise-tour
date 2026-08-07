@@ -1,26 +1,119 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #04101d;
+  --foreground: #eef4f8;
+
+  /* Brand palette — dark premium travel theme */
+  --color-brand-green-950: #052b1f;
+  --color-brand-green-900: #0a3d2b;
+  --color-brand-green-800: #0d523a;
+  --color-brand-green-700: #106b49;
+  --color-brand-green-600: #16a06a;
+  --color-brand-green-500: #22c47f;
+  --color-brand-green-400: #59d69e;
+  --color-brand-green-100: #d9f5e6;
+
+  --color-brand-blue-950: #041220;
+  --color-brand-blue-900: #082238;
+  --color-brand-blue-800: #0c3153;
+  --color-brand-blue-700: #114571;
+  --color-brand-blue-600: #1a5c93;
+  --color-brand-blue-500: #2b7bc0;
+  --color-brand-blue-400: #57a3e0;
+  --color-brand-blue-100: #dbeafc;
+
+  --color-brand-accent-500: #d9536f;
+
+  --color-ink-950: #020b14;
+  --color-ink-900: #04101d;
+  --color-ink-850: #071523;
+  --color-ink-800: #0a1a2b;
+  --color-ink-700: #0e2337;
+  --color-ink-600: #14314c;
+  --color-ink-border: #1c3350;
+  --color-muted: #8fa7bf;
+  --color-muted-light: #b8c9da;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-green-950: var(--color-brand-green-950);
+  --color-brand-green-900: var(--color-brand-green-900);
+  --color-brand-green-800: var(--color-brand-green-800);
+  --color-brand-green-700: var(--color-brand-green-700);
+  --color-brand-green-600: var(--color-brand-green-600);
+  --color-brand-green-500: var(--color-brand-green-500);
+  --color-brand-green-400: var(--color-brand-green-400);
+  --color-brand-green-100: var(--color-brand-green-100);
+
+  --color-brand-blue-950: var(--color-brand-blue-950);
+  --color-brand-blue-900: var(--color-brand-blue-900);
+  --color-brand-blue-800: var(--color-brand-blue-800);
+  --color-brand-blue-700: var(--color-brand-blue-700);
+  --color-brand-blue-600: var(--color-brand-blue-600);
+  --color-brand-blue-500: var(--color-brand-blue-500);
+  --color-brand-blue-400: var(--color-brand-blue-400);
+  --color-brand-blue-100: var(--color-brand-blue-100);
+
+  --color-brand-accent-500: var(--color-brand-accent-500);
+
+  --color-ink-950: var(--color-ink-950);
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-850: var(--color-ink-850);
+  --color-ink-800: var(--color-ink-800);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-600: var(--color-ink-600);
+  --color-ink-border: var(--color-ink-border);
+  --color-muted: var(--color-muted);
+  --color-muted-light: var(--color-muted-light);
+
+  --font-sans: var(--font-poppins);
+  --font-display: var(--font-playfair);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.brand-gradient-text {
+  background: linear-gradient(90deg, var(--color-brand-blue-400), var(--color-brand-green-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand-gradient-bg {
+  background: linear-gradient(120deg, var(--color-brand-blue-600) 0%, var(--color-brand-green-600) 100%);
+}
+
+.card-surface {
+  background: color-mix(in srgb, var(--color-ink-800) 92%, transparent);
+  border: 1px solid var(--color-ink-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
