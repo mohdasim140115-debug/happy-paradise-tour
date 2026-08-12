@@ -27,15 +27,13 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div
-        className={`border-b transition-all duration-300 ${
-          scrolled
-            ? "border-ink-border bg-ink-950/85 backdrop-blur-md"
-            : "border-transparent bg-ink-950/30 backdrop-blur-sm"
+        className={`border-b border-neutral-200 bg-white transition-shadow duration-300 ${
+          scrolled ? "shadow-sm" : ""
         }`}
       >
-        <nav className="mx-auto flex h-16 max-w-[1220px] items-center justify-between px-4 sm:px-6">
+        <nav className="mx-auto flex h-20 max-w-[1220px] items-center justify-between px-4 sm:px-6">
           <a href="#home" aria-label="Happy Paradise Tour & Travels — Home">
-            <Logo />
+            <Logo priority />
           </a>
 
           <ul className="hidden lg:flex items-center gap-7">
@@ -43,7 +41,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="text-[13.5px] font-medium text-muted-light transition-colors hover:text-white"
+                  className="text-[13.5px] font-medium text-ink-800 transition-colors hover:text-brand-blue-600"
                 >
                   {link.label}
                 </a>
@@ -60,7 +58,7 @@ export default function Navbar() {
           </a>
 
           <button
-            className="lg:hidden flex h-10 w-10 items-center justify-center rounded-full border border-ink-border text-white"
+            className="lg:hidden flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 text-ink-900"
             onClick={() => setOpen(true)}
             aria-label="Open menu"
           >
