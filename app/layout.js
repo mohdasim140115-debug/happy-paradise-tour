@@ -1,6 +1,7 @@
 import { Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import EmailButton from "@/components/EmailButton";
 import MobileStickyBar from "@/components/MobileStickyBar";
 
 const poppins = Poppins({
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col bg-background text-foreground pb-[72px] lg:pb-0">
         {children}
         <WhatsAppButton />
+        <EmailButton />
         <MobileStickyBar />
       </body>
     </html>
