@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Check, Moon, Phone } from "lucide-react";
-import { BRAND, PACKAGES, telHref, whatsappHref } from "@/lib/brand";
+import { BRAND, PACKAGES, telHref } from "@/lib/brand";
+import PackageInquiryModal from "./PackageInquiryModal";
 
 const BADGE_STYLES = {
   accent: "bg-brand-accent-500",
@@ -12,6 +14,8 @@ const BADGE_STYLES = {
 };
 
 export default function Packages() {
+  const [activePackage, setActivePackage] = useState(null);
+
   return (
     <section id="packages" className="border-t border-ink-border/60 py-14 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-[1220px] px-4 sm:px-6">
@@ -84,22 +88,21 @@ export default function Packages() {
                     <Phone className="h-3.5 w-3.5" />
                     Call Now
                   </a>
-                  <a
-                    href={whatsappHref(
-                      `Hi Happy Paradise Tour & Travels, I am interested in the ${pkg.name} – ${pkg.duration}. Please share more details.`
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => setActivePackage(pkg)}
                     className="flex h-11 flex-1 items-center justify-center rounded-full brand-gradient-bg text-[12.5px] font-semibold text-white transition-transform hover:scale-[1.02]"
                   >
                     Inquiry Now
-                  </a>
+                  </button>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      <PackageInquiryModal pkg={activePackage} onClose={() => setActivePackage(null)} />
     </section>
   );
 }

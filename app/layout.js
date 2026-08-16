@@ -3,6 +3,7 @@ import "./globals.css";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import EmailButton from "@/components/EmailButton";
 import MobileStickyBar from "@/components/MobileStickyBar";
+import WelcomePopup from "@/components/WelcomePopup";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
         <WhatsAppButton />
         <EmailButton />
         <MobileStickyBar />
+        <WelcomePopup />
       </body>
     </html>
   );

@@ -2,28 +2,32 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Send, User } from "lucide-react";
-import { whatsappHref } from "@/lib/brand";
+import { AlertCircle, ArrowRight, Loader2, Send, User } from "lucide-react";
+
+const EMPTY_FORM = { name: "", phone: "", date: "", travellers: "", message: "" };
 
 export default function ContactBooking() {
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    date: "",
-    travellers: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [status, setStatus] = useState("idle"); // idle | sending | success | error
 
   const handleChange = (e) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const message = `Hi Happy Paradise Tour & Travels, I would like a Kashmir package enquiry.\n\nName: ${form.name}\nPhone: ${form.phone}\nTravel Date: ${form.date}\nTravellers: ${form.travellers}\nMessage: ${form.message}`;
-    window.open(whatsappHref(message), "_blank");
-    setSubmitted(true);
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/send-enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, source: "Booking Form Enquiry" }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -49,7 +53,7 @@ export default function ContactBooking() {
               </p>
             </div>
 
-            {submitted ? (
+            {status === "success" ? (
               <div className="mx-auto mt-8 flex max-w-sm flex-col items-center gap-3 rounded-2xl bg-white/10 px-6 py-10 text-center backdrop-blur-sm">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
                   <Send className="h-5 w-5 text-white" />
@@ -58,11 +62,14 @@ export default function ContactBooking() {
                   Thank you{form.name ? `, ${form.name}` : ""}!
                 </h3>
                 <p className="text-[13.5px] text-white/80">
-                  Your enquiry has been opened on WhatsApp. Our Kashmir travel expert will contact
+                  Your enquiry has been sent to our team. Our Kashmir travel expert will contact
                   you shortly.
                 </p>
                 <button
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => {
+                    setForm(EMPTY_FORM);
+                    setStatus("idle");
+                  }}
                   className="mt-1 text-sm font-semibold text-white underline underline-offset-4"
                 >
                   Send another enquiry
@@ -142,12 +149,29 @@ export default function ContactBooking() {
                   />
                 </label>
 
+                {status === "error" && (
+                  <p className="flex items-center gap-1.5 text-xs font-medium text-white">
+                    <AlertCircle className="h-3.5 w-3.5" />
+                    Couldn't send your enquiry. Please try again or WhatsApp us directly.
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="mt-1 flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-brand-blue-800 transition-transform hover:scale-[1.02]"
+                  disabled={status === "sending"}
+                  className="mt-1 flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-brand-blue-800 transition-transform hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
                 >
-                  Get Free Quote
-                  <ArrowRight className="h-4 w-4" />
+                  {status === "sending" ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Get Free Quote
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </button>
               </form>
             )}
