@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { AlertCircle, ArrowRight, Loader2, Send, User } from "lucide-react";
+import { AlertCircle, ArrowRight, Loader2, User } from "lucide-react";
 
 const EMPTY_FORM = { name: "", phone: "", date: "", travellers: "", message: "" };
 
 export default function ContactBooking() {
+  const router = useRouter();
   const [form, setForm] = useState(EMPTY_FORM);
-  const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [status, setStatus] = useState("idle"); // idle | sending | error
 
   const handleChange = (e) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -24,7 +26,7 @@ export default function ContactBooking() {
         body: JSON.stringify({ ...form, source: "Booking Form Enquiry" }),
       });
       if (!res.ok) throw new Error("Failed");
-      setStatus("success");
+      router.push("/thank-you");
     } catch {
       setStatus("error");
     }
@@ -53,30 +55,7 @@ export default function ContactBooking() {
               </p>
             </div>
 
-            {status === "success" ? (
-              <div className="mx-auto mt-8 flex max-w-sm flex-col items-center gap-3 rounded-2xl bg-white/10 px-6 py-10 text-center backdrop-blur-sm">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                  <Send className="h-5 w-5 text-white" />
-                </span>
-                <h3 className="font-display text-lg font-bold text-white">
-                  Thank you{form.name ? `, ${form.name}` : ""}!
-                </h3>
-                <p className="text-[13.5px] text-white/80">
-                  Your enquiry has been sent to our team. Our Kashmir travel expert will contact
-                  you shortly.
-                </p>
-                <button
-                  onClick={() => {
-                    setForm(EMPTY_FORM);
-                    setStatus("idle");
-                  }}
-                  className="mt-1 text-sm font-semibold text-white underline underline-offset-4"
-                >
-                  Send another enquiry
-                </button>
-              </div>
-            ) : (
-              <form
+            <form
                 onSubmit={handleSubmit}
                 className="mx-auto mt-8 grid max-w-lg gap-3.5 rounded-2xl bg-ink-950/40 p-4 backdrop-blur-sm sm:p-6"
               >
@@ -174,7 +153,6 @@ export default function ContactBooking() {
                   )}
                 </button>
               </form>
-            )}
           </div>
         </motion.div>
       </div>

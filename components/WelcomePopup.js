@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, Loader2, Send, Sparkles, User, X } from "lucide-react";
 
@@ -13,9 +14,10 @@ const EMPTY_FORM = {
 const SESSION_KEY = "hp_welcome_popup_shown";
 
 export default function WelcomePopup() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [status, setStatus] = useState("idle"); // idle | sending | error
 
   useEffect(() => {
     if (sessionStorage.getItem(SESSION_KEY)) return;
@@ -55,7 +57,7 @@ export default function WelcomePopup() {
         }),
       });
       if (!res.ok) throw new Error("Failed");
-      setStatus("success");
+      router.push("/thank-you");
     } catch {
       setStatus("error");
     }
@@ -88,39 +90,19 @@ export default function WelcomePopup() {
               <X className="h-4 w-4" />
             </button>
 
-            {status === "success" ? (
-              <div className="flex flex-col items-center gap-3 py-8 text-center">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-green-600/20 text-brand-green-400">
-                  <Send className="h-5 w-5" />
-                </span>
-                <h3 className="font-display text-lg font-bold text-white">Enquiry Sent!</h3>
-                <p className="text-[13px] text-muted">
-                  Thanks{form.popupName ? `, ${form.popupName}` : ""}! Our team will contact you
-                  shortly.
-                </p>
-                <button
-                  type="button"
-                  onClick={close}
-                  className="mt-2 rounded-full border border-ink-border px-5 py-2 text-sm font-semibold text-white"
-                >
-                  Close
-                </button>
-              </div>
-            ) : (
-              <>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-green-600/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-brand-green-400">
-                  <Sparkles className="h-3 w-3" />
-                  Kashmir Couple Package
-                </span>
-                <h3 className="mt-3 pr-8 font-display text-xl font-bold text-white">
-                  Plan Your Dream Kashmir Vacation
-                </h3>
-                <p className="mt-1 text-[13px] text-muted">
-                  04 Nights / 05 Days starting from ₹22,000 per couple. Share your details and
-                  we'll get back to you shortly.
-                </p>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-green-600/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-brand-green-400">
+              <Sparkles className="h-3 w-3" />
+              Kashmir Couple Package
+            </span>
+            <h3 className="mt-3 pr-8 font-display text-xl font-bold text-white">
+              Plan Your Dream Kashmir Vacation
+            </h3>
+            <p className="mt-1 text-[13px] text-muted">
+              04 Nights / 05 Days starting from ₹22,000 per couple. Share your details and we'll
+              get back to you shortly.
+            </p>
 
-                <form onSubmit={handleSubmit} className="mt-5 grid gap-3.5">
+            <form onSubmit={handleSubmit} className="mt-5 grid gap-3.5">
                   <div className="grid gap-3.5 sm:grid-cols-2">
                     <label className="flex flex-col gap-1.5 text-xs font-medium text-muted-light">
                       Full Name
@@ -203,8 +185,6 @@ export default function WelcomePopup() {
                     )}
                   </button>
                 </form>
-              </>
-            )}
           </motion.div>
         </motion.div>
       )}

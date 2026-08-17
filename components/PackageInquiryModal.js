@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, Loader2, Send, User, X } from "lucide-react";
 
@@ -13,8 +14,9 @@ const EMPTY_FORM = {
 };
 
 export default function PackageInquiryModal({ pkg, onClose }) {
+  const router = useRouter();
   const [form, setForm] = useState(EMPTY_FORM);
-  const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [status, setStatus] = useState("idle"); // idle | sending | error
   const open = Boolean(pkg);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function PackageInquiryModal({ pkg, onClose }) {
         }),
       });
       if (!res.ok) throw new Error("Failed");
-      setStatus("success");
+      router.push("/thank-you");
     } catch {
       setStatus("error");
     }
@@ -76,45 +78,25 @@ export default function PackageInquiryModal({ pkg, onClose }) {
             className="card-surface w-full max-w-md rounded-2xl p-5 sm:p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            {status === "success" ? (
-              <div className="flex flex-col items-center gap-3 py-8 text-center">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-green-600/20 text-brand-green-400">
-                  <Send className="h-5 w-5" />
-                </span>
-                <h3 className="font-display text-lg font-bold text-white">Enquiry Sent!</h3>
-                <p className="text-[13px] text-muted">
-                  Thanks{form.inquiryName ? `, ${form.inquiryName}` : ""}! Our team will contact
-                  you shortly about the {pkg?.name}.
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="font-display text-lg font-bold text-white">Enquire Now</h3>
+                <p className="mt-0.5 text-xs text-muted">
+                  {pkg?.name} — {pkg?.duration}. Fill your details and our team will get an
+                  email with your enquiry.
                 </p>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="mt-2 rounded-full border border-ink-border px-5 py-2 text-sm font-semibold text-white"
-                >
-                  Close
-                </button>
               </div>
-            ) : (
-              <>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-white">Enquire Now</h3>
-                    <p className="mt-0.5 text-xs text-muted">
-                      {pkg?.name} — {pkg?.duration}. Fill your details and our team will get an
-                      email with your enquiry.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    aria-label="Close"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ink-border text-muted-light hover:text-white"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ink-border text-muted-light hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-                <form onSubmit={handleSubmit} className="mt-5 grid gap-3.5">
+            <form onSubmit={handleSubmit} className="mt-5 grid gap-3.5">
                   <div className="grid gap-3.5 sm:grid-cols-2">
                     <label className="flex flex-col gap-1.5 text-xs font-medium text-muted-light">
                       Full Name
@@ -209,8 +191,6 @@ export default function PackageInquiryModal({ pkg, onClose }) {
                     )}
                   </button>
                 </form>
-              </>
-            )}
           </motion.div>
         </motion.div>
       )}
