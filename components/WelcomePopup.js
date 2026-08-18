@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, Loader2, Send, Sparkles, User, X } from "lucide-react";
 
@@ -15,18 +15,20 @@ const SESSION_KEY = "hp_welcome_popup_shown";
 
 export default function WelcomePopup() {
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [status, setStatus] = useState("idle"); // idle | sending | error
 
   useEffect(() => {
+    if (pathname !== "/") return; // never show on thank-you or other non-home pages
     if (sessionStorage.getItem(SESSION_KEY)) return;
     const timer = setTimeout(() => {
       setOpen(true);
       sessionStorage.setItem(SESSION_KEY, "1");
     }, 2500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -57,6 +59,7 @@ export default function WelcomePopup() {
         }),
       });
       if (!res.ok) throw new Error("Failed");
+      close();
       router.push("/thank-you");
     } catch {
       setStatus("error");

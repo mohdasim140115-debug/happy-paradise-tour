@@ -53,6 +53,7 @@ export default function EmailButton() {
         }),
       });
       if (!res.ok) throw new Error("Failed");
+      close();
       router.push("/thank-you");
     } catch {
       setStatus("error");
